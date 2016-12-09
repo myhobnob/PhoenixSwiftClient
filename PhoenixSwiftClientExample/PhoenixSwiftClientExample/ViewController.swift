@@ -32,6 +32,8 @@ class ViewController: UIViewController {
             print("payload is", payload!["baz"]!)
           })
         })
+
+        let _ = chan.leave()
       }
     }
   }

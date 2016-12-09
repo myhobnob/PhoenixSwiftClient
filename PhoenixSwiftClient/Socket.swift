@@ -50,7 +50,11 @@ public class Socket: WebSocketDelegate {
   }
   
   public func reconnectAfterMs(tries: Int) -> Int {
-    return [1000, 2000, 5000, 10000][tries - 1] ?? 10000
+    if tries < 4 {
+        return [1000, 2000, 5000, 10000][tries]
+    } else {
+        return 10000
+    }
   }
   
   @objc public func disconnect (callback: (() -> ())?, code: NSInteger) {

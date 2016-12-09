@@ -8,6 +8,21 @@
 
 import Foundation
 
+let CHANNEL_EVENTS = [
+    "close": "phx_close",
+    "error": "phx_error",
+    "join": "phx_join",
+    "reply": "phx_reply",
+    "leave": "phx_leave"
+]
+
+let IGNORED_EVENTS = [
+    "phx_close",
+    "phx_error",
+    "phx_leave",
+    "phx_join"
+]
+
 public class Channel {
   enum ChannelState {
     case closed
@@ -16,21 +31,6 @@ public class Channel {
     case joining
     case leaving
   }
-  
-  let CHANNEL_EVENTS = [
-    "close": "phx_close",
-    "error": "phx_error",
-    "join": "phx_join",
-    "reply": "phx_reply",
-    "leave": "phx_leave"
-  ]
-  
-  let IGNORED_EVENTS = [
-    "phx_close",
-    "phx_error",
-    "phx_leave",
-    "phx_join"
-  ]
   
   var socket: Socket
   var state: ChannelState = ChannelState.closed
@@ -57,7 +57,7 @@ public class Channel {
       self.pushBuffer.removeAll()
     })
     
-    onClose(callback: { (_: Any?) -> () in
+    onClose(callback: { (_: Any?, _: Int?) -> () in
       self.rejoinTimer?.reset()
 //      self.socket.log("channel", "close \(topic) \(joinRef())")
       self.state = ChannelState.closed
@@ -110,7 +110,7 @@ public class Channel {
     return joinPush
   }
   
-  public func onClose(callback: @escaping (_: Any?) -> ()) {
+    public func onClose(callback: @escaping (_: Any?, _: NSInteger?) -> ()) {
     on(event: CHANNEL_EVENTS["close"]!, callback: callback)
   }
   
@@ -154,7 +154,7 @@ public class Channel {
       let message = Message(topic: topic, event: CHANNEL_EVENTS["close"]!, payload: "leave", ref: joinRef()!)
       self.trigger(message: message)
     }
-    
+
     state = ChannelState.leaving
     let leavePush = Push(channel: self, event: CHANNEL_EVENTS["leave"]!, payload: [:], timeout: timeout ?? self.timeout)
     leavePush.receive(status: "ok", callback: closeCallback).receive(status: "timeout", callback: closeCallback)
