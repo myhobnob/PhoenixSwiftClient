@@ -149,7 +149,7 @@ public class Socket: WebSocketDelegate {
   }
   
   public func isConnected() -> Bool {
-    return (conn?.isConnected)!
+    return conn != nil && conn!.isConnected
   }
   
   public func remove(channel: Channel) {
