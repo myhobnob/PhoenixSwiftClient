@@ -27,7 +27,7 @@ public class ConnectionTimer {
   
   public func scheduleTimeout() {
     timer.invalidate()
-    timer = Timer.scheduledTimer(timeInterval: Double(timerCalc(tries)), target: self, selector: #selector(handleTimeout), userInfo: nil, repeats: false)
+    timer = Timer.scheduledTimer(timeInterval: Double(timerCalc(tries) / 1000), target: self, selector: #selector(handleTimeout), userInfo: nil, repeats: false)
   }
   
   @objc public func handleTimeout(_: Timer) {

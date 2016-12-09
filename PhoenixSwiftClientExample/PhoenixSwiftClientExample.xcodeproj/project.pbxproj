@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-                5EAC485F1DFA38B6007B9188 /* PhoenixSwiftClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5EAC485E1DFA38B6007B9188 /* PhoenixSwiftClient.framework */; };
-                5EAC48601DFA38B6007B9188 /* PhoenixSwiftClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5EAC485E1DFA38B6007B9188 /* PhoenixSwiftClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5EAC485F1DFA38B6007B9188 /* PhoenixSwiftClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5EAC485E1DFA38B6007B9188 /* PhoenixSwiftClient.framework */; };
+		5EAC48601DFA38B6007B9188 /* PhoenixSwiftClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5EAC485E1DFA38B6007B9188 /* PhoenixSwiftClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5EE51C0A1DF662C900879010 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EE51C091DF662C900879010 /* AppDelegate.swift */; };
 		5EE51C0C1DF662C900879010 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EE51C0B1DF662C900879010 /* ViewController.swift */; };
 		5EE51C0F1DF662C900879010 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5EE51C0D1DF662C900879010 /* Main.storyboard */; };
@@ -18,24 +18,24 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-                5EAC48611DFA38B6007B9188 /* Embed Frameworks */ = {
-                        isa = PBXCopyFilesBuildPhase;
-                        buildActionMask = 2147483647;
-                        dstPath = "";
-                        dstSubfolderSpec = 10;
-                        files = (
-                                5EAC48601DFA38B6007B9188 /* PhoenixSwiftClient.framework in Embed Frameworks */,
-                        );
-                        name = "Embed Frameworks";
-                        runOnlyForDeploymentPostprocessing = 0;
-                };
+		5EAC48611DFA38B6007B9188 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				5EAC48601DFA38B6007B9188 /* PhoenixSwiftClient.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		1A37B22D623B2434996DA86F /* Pods_PhoenixSwiftClientExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PhoenixSwiftClientExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5251A12F82D39A307E614E2A /* Pods-PhoenixSwiftClientExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhoenixSwiftClientExample.release.xcconfig"; path = "../Pods/Target Support Files/Pods-PhoenixSwiftClientExample/Pods-PhoenixSwiftClientExample.release.xcconfig"; sourceTree = "<group>"; };
 		59507BBAC8A2F950EDDC14B7 /* Pods-PhoenixSwiftClientExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhoenixSwiftClientExample.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-PhoenixSwiftClientExample/Pods-PhoenixSwiftClientExample.debug.xcconfig"; sourceTree = "<group>"; };
-                5EAC485E1DFA38B6007B9188 /* PhoenixSwiftClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PhoenixSwiftClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5EAC485E1DFA38B6007B9188 /* PhoenixSwiftClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PhoenixSwiftClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5EE51C061DF662C900879010 /* PhoenixSwiftClientExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhoenixSwiftClientExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5EE51C091DF662C900879010 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5EE51C0B1DF662C900879010 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -51,7 +51,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7518FB5290FB9296EFC2616D /* Pods_PhoenixSwiftClientExample.framework in Frameworks */,
-                                5EAC485F1DFA38B6007B9188 /* PhoenixSwiftClient.framework in Frameworks */,
+				5EAC485F1DFA38B6007B9188 /* PhoenixSwiftClient.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -61,7 +61,7 @@
 		5EE51BFD1DF662C900879010 = {
 			isa = PBXGroup;
 			children = (
-                                5EAC485E1DFA38B6007B9188 /* PhoenixSwiftClient.framework */,
+				5EAC485E1DFA38B6007B9188 /* PhoenixSwiftClient.framework */,
 				5EE51C081DF662C900879010 /* PhoenixSwiftClientExample */,
 				5EE51C071DF662C900879010 /* Products */,
 				91BC4FCDD5A447F08E3E816C /* Pods */,
@@ -120,7 +120,7 @@
 				5EE51C041DF662C900879010 /* Resources */,
 				B770589410662DF67540ECA5 /* [CP] Embed Pods Frameworks */,
 				777B7FFF3B582E93116E8D9E /* [CP] Copy Pods Resources */,
-                                5EAC48611DFA38B6007B9188 /* Embed Frameworks */,
+				5EAC48611DFA38B6007B9188 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

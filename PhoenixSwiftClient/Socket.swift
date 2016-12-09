@@ -49,7 +49,7 @@ public class Socket: WebSocketDelegate {
     }, timerCalc: self.reconnectAfterMs)
   }
   
-  public func reconnectAfterMs(tries: Int) -> Int {
+  internal func reconnectAfterMs(tries: Int) -> Int {
     if tries < 4 {
         return [1000, 2000, 5000, 10000][tries]
     } else {
@@ -101,7 +101,7 @@ public class Socket: WebSocketDelegate {
     reconnectTimer?.reset()
     
     heartbeatTimer.invalidate()
-    heartbeatTimer = Timer.scheduledTimer(timeInterval: Double(heartbeatIntervalMs), target: self, selector: #selector(sendHeartbeat), userInfo: nil, repeats: true)
+    heartbeatTimer = Timer.scheduledTimer(timeInterval: Double(heartbeatIntervalMs / 1000), target: self, selector: #selector(sendHeartbeat), userInfo: nil, repeats: true)
     
     stateChangeCallbacks["open"]?.forEach({ $0() })
   }
@@ -146,7 +146,7 @@ public class Socket: WebSocketDelegate {
     print("Received data instead of string", data)
   }
   
-  public func triggerChanError() {
+  internal func triggerChanError() {
     channels.forEach({
       $0.trigger(message: Message(topic: $0.topic, event: "error", payload: nil, ref: -1))
     })
@@ -179,7 +179,7 @@ public class Socket: WebSocketDelegate {
     }
   }
   
-  public func makeRef() -> Int {
+  internal func makeRef() -> Int {
     let newRef = ref + 1
     if (newRef == ref) {
       ref = 0

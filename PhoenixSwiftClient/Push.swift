@@ -30,7 +30,7 @@ public class Push {
     self.timeout = timeout
   }
   
-  public func resend(timeout: Int) {
+  internal func resend(timeout: Int) {
     self.timeout = timeout
     cancelRefEvent()
     ref = nil
@@ -70,14 +70,14 @@ public class Push {
     }
   }
   
-  public func cancelTimeout () {
+  internal func cancelTimeout () {
     if let timer = timeoutTimer {
       timer.invalidate()
       timeoutTimer = nil
     }
   }
   
-  public func startTimeout () {
+  internal func startTimeout () {
     if timeoutTimer != nil {
       return
     }
@@ -95,7 +95,7 @@ public class Push {
     refEvent = channel.replyEventName(ref: ref)
     channel.on(event: refEvent!, callback: handlePayload)
     
-    timeoutTimer = Timer.scheduledTimer(timeInterval: Double(timeout), target: self, selector: #selector(handleTimeout), userInfo: nil, repeats: false)
+    timeoutTimer = Timer.scheduledTimer(timeInterval: Double(timeout) / 1000, target: self, selector: #selector(handleTimeout), userInfo: nil, repeats: false)
   }
   
   private func hasReceived(status: String) -> Bool {
@@ -106,7 +106,7 @@ public class Push {
     trigger(status: "timeout", response: [:])
   }
   
-  public func trigger(status: String, response: Any?) {
+  internal func trigger(status: String, response: Any?) {
     let payload = ["status": status, "response": response]
     let message = Message(topic: channel.topic, event: refEvent!, payload: payload, ref: nil)
     channel.trigger(message: message)
