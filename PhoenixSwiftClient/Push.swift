@@ -52,7 +52,7 @@ public class Push {
     if let chan = channel {
       startTimeout()
       sent = true
-      let message = Message(topic: chan.topic, event: event, payload: payload, ref: ref!)
+      let message = Message(topic: chan.topic, event: event, payload: payload, ref: ref)
       chan.socket?.push(message: message)
     }
   }
@@ -98,11 +98,11 @@ public class Push {
     }
     
     if let chan = channel, let socket = chan.socket {
-        ref = socket.makeRef()
-        refEvent = chan.replyEventName(ref: ref)
-        chan.on(event: refEvent!, callback: handlePayload)
+      ref = socket.makeRef()
+      refEvent = chan.replyEventName(ref: ref)
+      chan.on(event: refEvent!, callback: handlePayload)
 
-        timeoutTimer = Timer.scheduledTimer(timeInterval: Double(timeout) / 1000, target: self, selector: #selector(handleTimeout), userInfo: nil, repeats: false)
+      timeoutTimer = Timer.scheduledTimer(timeInterval: Double(timeout) / 1000, target: self, selector: #selector(handleTimeout), userInfo: nil, repeats: false)
     }
   }
   
@@ -115,9 +115,9 @@ public class Push {
   }
   
   internal func trigger(status: String, response: Any?) {
-    if let chan = channel {
+    if let chan = channel, let event = refEvent {
       let payload = ["status": status, "response": response]
-      let message = Message(topic: chan.topic, event: refEvent!, payload: payload, ref: nil)
+      let message = Message(topic: chan.topic, event: event, payload: payload, ref: nil)
       chan.trigger(message: message)
     }
   }

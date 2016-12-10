@@ -36,6 +36,7 @@ public class Channel {
   var state: ChannelState = ChannelState.closed
   var topic: String
   var params: Any?
+
   var bindings: [(event: String, callback: (_: Any, _: NSInteger?) -> ())] = []
   var timeout: NSInteger
   var joinedOnce = false
@@ -160,7 +161,7 @@ public class Channel {
   
   public func leave(timeout: NSInteger? = nil) -> Push {
     func closeCallback (_: Any?) {
-//      self.socket.log("channel", "leave \(topic)")
+      //      self.socket.log("channel", "leave \(topic)")
       let message = Message(topic: topic, event: CHANNEL_EVENTS["close"]!, payload: "leave", ref: joinRef()!)
       self.trigger(message: message)
     }
