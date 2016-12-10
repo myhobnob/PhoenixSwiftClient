@@ -45,9 +45,9 @@
 		5E0612AF1DF64E9E00867F3A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5E3203D71DF8E57200E6A792 /* ConnectionTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionTimer.swift; sourceTree = "<group>"; };
 		5EAE532F1DF74C2400E57351 /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
-		5EB0288A1DF64EF20010FCDC /* Socket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Socket.swift; sourceTree = "<group>"; };
-		5EE51C1B1DF6648800879010 /* Channel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
-		5EE51C1D1DF666E700879010 /* Push.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Push.swift; sourceTree = "<group>"; };
+                5EB0288A1DF64EF20010FCDC /* Socket.swift */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = Socket.swift; sourceTree = "<group>"; tabWidth = 2; };
+                5EE51C1B1DF6648800879010 /* Channel.swift */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; tabWidth = 2; };
+                5EE51C1D1DF666E700879010 /* Push.swift */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = Push.swift; sourceTree = "<group>"; tabWidth = 2; };
 		98D357963DC2D206F8DB7C13 /* Pods_PhoenixSwiftClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PhoenixSwiftClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BBA9D7A44A94E462591814B9 /* Pods_PhoenixSwiftClientTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PhoenixSwiftClientTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DAED78CAECB3B82D25C0E0E4 /* Pods-PhoenixSwiftClientTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhoenixSwiftClientTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PhoenixSwiftClientTests/Pods-PhoenixSwiftClientTests.debug.xcconfig"; sourceTree = "<group>"; };

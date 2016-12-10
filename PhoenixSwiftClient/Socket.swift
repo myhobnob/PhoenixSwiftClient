@@ -48,6 +48,11 @@ public class Socket: WebSocketDelegate {
       self.disconnect(callback: self.connect, code: 0)
     }, timerCalc: self.reconnectAfterMs)
   }
+
+  deinit {
+    heartbeatTimer.invalidate()
+    reconnectTimer?.reset()
+  }
   
   internal func reconnectAfterMs(tries: Int) -> Int {
     if tries < 4 {

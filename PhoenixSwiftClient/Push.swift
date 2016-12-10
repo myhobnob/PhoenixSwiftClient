@@ -11,8 +11,8 @@ import Foundation
 typealias RecHook = (status: String, callback: ([String: AnyObject]?) -> ())
 
 public class Push {
+  weak var channel: Channel?
   var bindings: [String] = []
-  var channel: Channel
   var event: String
   var payload: Any?
   var timeout: Int
@@ -30,6 +30,10 @@ public class Push {
     self.timeout = timeout
   }
   
+  deinit {
+    timeoutTimer?.invalidate()
+  }
+
   internal func resend(timeout: Int) {
     self.timeout = timeout
     cancelRefEvent()
@@ -45,10 +49,12 @@ public class Push {
       return
     }
     
-    startTimeout()
-    sent = true
-    let message = Message(topic: channel.topic, event: event, payload: payload, ref: ref!)
-    channel.socket.push(message: message)
+    if let chan = channel {
+      startTimeout()
+      sent = true
+      let message = Message(topic: chan.topic, event: event, payload: payload, ref: ref!)
+      chan.socket?.push(message: message)
+    }
   }
   
   public func receive(status: String, callback: @escaping ([String: AnyObject]?) -> ()) -> Push {
@@ -65,8 +71,8 @@ public class Push {
   }
   
   private func cancelRefEvent() {
-    if let event = self.refEvent {
-      channel.off(event: event)
+    if let event = refEvent, let chan = channel {
+      chan.off(event: event)
     }
   }
   
@@ -91,11 +97,13 @@ public class Push {
       matchReceive(status: response.status, response: response.response)
     }
     
-    ref = channel.socket.makeRef()
-    refEvent = channel.replyEventName(ref: ref)
-    channel.on(event: refEvent!, callback: handlePayload)
-    
-    timeoutTimer = Timer.scheduledTimer(timeInterval: Double(timeout) / 1000, target: self, selector: #selector(handleTimeout), userInfo: nil, repeats: false)
+    if let chan = channel, let socket = chan.socket {
+        ref = socket.makeRef()
+        refEvent = chan.replyEventName(ref: ref)
+        chan.on(event: refEvent!, callback: handlePayload)
+
+        timeoutTimer = Timer.scheduledTimer(timeInterval: Double(timeout) / 1000, target: self, selector: #selector(handleTimeout), userInfo: nil, repeats: false)
+    }
   }
   
   private func hasReceived(status: String) -> Bool {
@@ -107,8 +115,10 @@ public class Push {
   }
   
   internal func trigger(status: String, response: Any?) {
-    let payload = ["status": status, "response": response]
-    let message = Message(topic: channel.topic, event: refEvent!, payload: payload, ref: nil)
-    channel.trigger(message: message)
+    if let chan = channel {
+      let payload = ["status": status, "response": response]
+      let message = Message(topic: chan.topic, event: refEvent!, payload: payload, ref: nil)
+      chan.trigger(message: message)
+    }
   }
 }

@@ -9,30 +9,30 @@
 import Foundation
 
 let CHANNEL_EVENTS = [
-    "close": "phx_close",
-    "error": "phx_error",
-    "join": "phx_join",
-    "reply": "phx_reply",
-    "leave": "phx_leave"
+  "close": "phx_close",
+  "error": "phx_error",
+  "join": "phx_join",
+  "reply": "phx_reply",
+  "leave": "phx_leave"
 ]
 
 let IGNORED_EVENTS = [
-    "phx_close",
-    "phx_error",
-    "phx_leave",
-    "phx_join"
+  "phx_close",
+  "phx_error",
+  "phx_leave",
+  "phx_join"
 ]
 
+enum ChannelState {
+  case closed
+  case errored
+  case joined
+  case joining
+  case leaving
+}
+
 public class Channel {
-  enum ChannelState {
-    case closed
-    case errored
-    case joined
-    case joining
-    case leaving
-  }
-  
-  var socket: Socket
+  weak var socket: Socket?
   var state: ChannelState = ChannelState.closed
   var topic: String
   var params: Any?
@@ -49,6 +49,7 @@ public class Channel {
     self.socket = socket
     timeout = socket.timeout
     
+    // Set up join message and timers.
     joinPush = Push(channel: self, event: CHANNEL_EVENTS["join"]!, payload: params, timeout: timeout)
     joinPush!.receive(status: "ok", callback: { (_: Any?) -> () in
       self.state = ChannelState.joined
@@ -57,34 +58,43 @@ public class Channel {
       self.pushBuffer.removeAll()
     })
     
-    onClose(callback: { (_: Any?, _: Int?) -> () in
-      self.rejoinTimer?.reset()
-//      self.socket.log("channel", "close \(topic) \(joinRef())")
-      self.state = ChannelState.closed
-      self.socket.remove(channel: self)
-    })
-    
-    onError(callback: { (reason: Any?, _: NSInteger?) -> () in
-      self.rejoinTimer?.reset()
-//      self.socket.log("channel", "error \(topic)", reason)
-      self.state = ChannelState.errored
-      self.rejoinTimer = self.scheduleRejoinTimer()
-    })
-    
     joinPush!.receive(status: "timeout", callback: { (_: Any?) -> () in
-//      self.socket.log("channel", "timeout \(topic)", joinPush.timeout)
+      //      self.socket.log("channel", "timeout \(topic)", joinPush.timeout)
       self.state = ChannelState.errored
       self.rejoinTimer = self.scheduleRejoinTimer()
     })
-    
+
+    // Set up channel state callbacks and replies
     on(event: CHANNEL_EVENTS["reply"]!, callback: { (payload: Any?, ref: Int?) in
       let message = Message(topic: self.topic, event: self.replyEventName(ref: ref), payload: payload, ref: ref)
       self.trigger(message: message)
     })
+
+    onClose(callback: { (_: Any?, _: Int?) -> () in
+      self.rejoinTimer?.reset()
+      //      self.socket.log("channel", "close \(topic) \(joinRef())")
+      self.state = ChannelState.closed
+      self.socket?.remove(channel: self)
+    })
+    
+    onError(callback: { (reason: Any?, _: NSInteger?) -> () in
+      self.rejoinTimer?.reset()
+      //      self.socket.log("channel", "error \(topic)", reason)
+      self.state = ChannelState.errored
+      self.rejoinTimer = self.scheduleRejoinTimer()
+    })
   }
   
-  private func scheduleRejoinTimer() -> ConnectionTimer {
-    let timer = ConnectionTimer(callback: self.rejoinUntilConnected, timerCalc: socket.reconnectAfterMs)
+  deinit {
+    rejoinTimer?.reset()
+  }
+
+  private func scheduleRejoinTimer() -> ConnectionTimer? {
+    if socket == nil {
+      return nil
+    }
+
+    let timer = ConnectionTimer(callback: self.rejoinUntilConnected, timerCalc: socket!.reconnectAfterMs)
     timer.scheduleTimeout()
     return timer
   }
@@ -93,7 +103,7 @@ public class Channel {
     rejoinTimer?.reset()
     rejoinTimer = scheduleRejoinTimer()
     
-    if (socket.isConnected()) {
+    if (socket != nil && socket!.isConnected()) {
       rejoin(timeout: nil)
     }
   }
@@ -110,7 +120,7 @@ public class Channel {
     return joinPush
   }
   
-    public func onClose(callback: @escaping (_: Any?, _: NSInteger?) -> ()) {
+  public func onClose(callback: @escaping (_: Any?, _: NSInteger?) -> ()) {
     on(event: CHANNEL_EVENTS["close"]!, callback: callback)
   }
   
@@ -127,7 +137,7 @@ public class Channel {
   }
   
   private func canPush() -> Bool {
-    return socket.isConnected() && isJoined()
+    return socket != nil && socket!.isConnected() && isJoined()
   }
   
   public func push(event: String, payload: Any?, timeout: NSInteger? = nil) -> Push? {
