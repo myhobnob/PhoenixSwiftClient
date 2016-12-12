@@ -197,7 +197,7 @@ public class Channel {
   }
   
   private func rejoin(timeout: NSInteger?) {
-    if isLeaving() {
+    if isLeaving() || state == ChannelState.joining {
       return
     }
     

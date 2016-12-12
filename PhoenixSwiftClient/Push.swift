@@ -53,6 +53,9 @@ public class Push {
       startTimeout()
       sent = true
       let message = Message(topic: chan.topic, event: event, payload: payload, ref: ref)
+      print("-------- PHOENIX WEBSOCKET REQUEST ---------")
+      print("Sending messsage to topic: \(chan.topic)")
+      print("Payload: \(message.toJson())")
       chan.socket?.push(message: message)
     }
   }
@@ -79,12 +82,11 @@ public class Push {
   internal func cancelTimeout () {
     if let timer = timeoutTimer {
       timer.invalidate()
-      timeoutTimer = nil
     }
   }
   
   internal func startTimeout () {
-    if timeoutTimer != nil {
+    if timeoutTimer != nil && timeoutTimer!.isValid {
       return
     }
     

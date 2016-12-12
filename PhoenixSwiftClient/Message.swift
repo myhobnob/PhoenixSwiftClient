@@ -31,6 +31,7 @@ public class Message {
     
     guard let jsonData = try? JSONSerialization.data(withJSONObject: json, options: []),
       let jsonString = String(data: jsonData, encoding: String.Encoding.utf8) else {
+        print("Failed to convert jsonData to string")
         return ""
     }
     

@@ -14,7 +14,7 @@ var DEFAULT_HEARTBEAT_INTERVAL = 30000
 
 public class Socket: WebSocketDelegate {
   var conn: WebSocket?
-  var stateChangeCallbacks: [String: [() -> ()]] = ["open": [], "close": [], "error": [], "message": []]
+  var stateChangeCallbacks: [String: [(_: Any?) -> ()]] = ["open": [], "close": [], "error": [], "message": []]
   var channels: [Channel] = []
   var sendBuffer: [() -> ()] = []
   var ref = 0
@@ -85,19 +85,19 @@ public class Socket: WebSocketDelegate {
   
   // TODO: Implement overridable logger. Maybe as a delegate method?
   
-  public func onOpen(callback: @escaping () -> ()) {
+  public func onOpen(callback: @escaping (_: Any?) -> ()) {
     stateChangeCallbacks["open"]!.append(callback)
   }
   
-  public func onClose(callback: @escaping () -> ()) {
+  public func onClose(callback: @escaping (_: Any?) -> ()) {
     stateChangeCallbacks["close"]!.append(callback)
   }
   
-  public func onError(callback: @escaping () -> ()) {
-    stateChangeCallbacks["error"]!.append(callback)
+  public func onError(callback: @escaping (_: NSError?) -> ()) {
+    stateChangeCallbacks["error"]!.append(callback as! (Any?) -> ())
   }
   
-  public func onMessage(callback: @escaping () -> ()) {
+  public func onMessage(callback: @escaping (_: Any?) -> ()) {
     stateChangeCallbacks["message"]!.append(callback)
   }
   
@@ -108,18 +108,19 @@ public class Socket: WebSocketDelegate {
     heartbeatTimer.invalidate()
     heartbeatTimer = Timer.scheduledTimer(timeInterval: Double(heartbeatIntervalMs / 1000), target: self, selector: #selector(sendHeartbeat), userInfo: nil, repeats: true)
     
-    stateChangeCallbacks["open"]?.forEach({ $0() })
+    stateChangeCallbacks["open"]?.forEach({ $0(nil) })
   }
   
   public func websocketDidDisconnect(socket: WebSocket, error: NSError?) {
-    triggerChanError()
+    triggerChanError(error)
     heartbeatTimer.invalidate()
     reconnectTimer?.scheduleTimeout()
     
     if error != nil {
-      stateChangeCallbacks["error"]?.forEach({ $0() })
+      print("Websocket Disconnected with error: \(error?.localizedDescription)")
+      stateChangeCallbacks["error"]?.forEach({ $0(error) })
     } else {
-      stateChangeCallbacks["close"]?.forEach({ $0() })
+      stateChangeCallbacks["close"]?.forEach({ $0(nil) })
     }
     
   }
@@ -142,6 +143,10 @@ public class Socket: WebSocketDelegate {
     let incomingRef = refString == nil ? nil : Int(refString!)
 
     let message = Message(topic: topic, event: event, payload: msg, ref: incomingRef)
+    print("Received message for topic: \(topic)")
+    print("Raw payload: \(text)")
+    print("Parsed payload: \(message.toJson())")
+
     // Log message
     self.channels.filter({ $0.isMember(topic: topic) }).forEach({ $0.trigger(message: message) })
   }
@@ -151,9 +156,9 @@ public class Socket: WebSocketDelegate {
     print("Received data instead of string", data)
   }
   
-  internal func triggerChanError() {
+  internal func triggerChanError(_ error: NSError?) {
     channels.forEach({
-      $0.trigger(message: Message(topic: $0.topic, event: "error", payload: nil, ref: -1))
+      $0.trigger(message: Message(topic: $0.topic, event: "error", payload: error?.localizedDescription, ref: -1))
     })
   }
   
