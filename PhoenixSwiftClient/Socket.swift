@@ -155,10 +155,10 @@ public class Socket: WebSocketDelegate {
     // Apparently not sent by Phoenix
     print("Received data instead of string", data)
   }
-  
+ 
   internal func triggerChanError(_ error: NSError?) {
     channels.forEach({
-      $0.trigger(message: Message(topic: $0.topic, event: "error", payload: error?.localizedDescription, ref: -1))
+      $0.trigger(message: Message(topic: $0.topic, event: "error", payload: error, ref: -1))
     })
   }
   
