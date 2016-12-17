@@ -8,7 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		1AFAF6293FD734CFDBC05A3F /* Pods_PhoenixSwiftClientTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBA9D7A44A94E462591814B9 /* Pods_PhoenixSwiftClientTests.framework */; };
-		31E84F2D1DFBBF8D0040DAA5 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31E84F2C1DFBBF8D0040DAA5 /* Starscream.framework */; };
+		311CCBE71E04B2ED0049F56C /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 311CCBE61E04B2ED0049F56C /* Starscream.framework */; };
+		311CCBE81E04B2F60049F56C /* Starscream.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 311CCBC91E04B1440049F56C /* Starscream.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5E02F7451DF789CE00830414 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E02F7441DF789CE00830414 /* Message.swift */; };
 		5E02F7471DF79D6200830414 /* Presence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E02F7461DF79D6200830414 /* Presence.swift */; };
 		5E0612A91DF64E9E00867F3A /* PhoenixSwiftClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E06129F1DF64E9D00867F3A /* PhoenixSwiftClient.framework */; };
@@ -31,9 +32,27 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		311CCBC51E04B02B0049F56C /* Copy Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				311CCBE81E04B2F60049F56C /* Starscream.framework in Copy Frameworks */,
+			);
+			name = "Copy Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		074D882319E1DAFFFE9B2EFD /* Pods-PhoenixSwiftClientTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhoenixSwiftClientTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-PhoenixSwiftClientTests/Pods-PhoenixSwiftClientTests.release.xcconfig"; sourceTree = "<group>"; };
 		0E257CFCA1C27424136D0CF6 /* Pods-PhoenixSwiftClient.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhoenixSwiftClient.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PhoenixSwiftClient/Pods-PhoenixSwiftClient.debug.xcconfig"; sourceTree = "<group>"; };
+		311CCBC31E04AFDB0049F56C /* Pods_PhoenixSwiftClient.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pods_PhoenixSwiftClient.framework; path = "Pods/../build/Debug-iphoneos/Pods_PhoenixSwiftClient.framework"; sourceTree = "<group>"; };
+		311CCBC91E04B1440049F56C /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = "../../../../../../../../Library/Developer/Xcode/DerivedData/Hobnob-arjqfzghjwdetacyicptjmcmkgua/Build/Products/Debug-iphoneos/Starscream/Starscream.framework"; sourceTree = "<group>"; };
+		311CCBCE1E04B2410049F56C /* Pods_PhoenixSwiftClient.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pods_PhoenixSwiftClient.framework; path = "Pods/../build/Debug-iphoneos/Pods_PhoenixSwiftClient.framework"; sourceTree = "<group>"; };
+		311CCBE61E04B2ED0049F56C /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = "Starscream/build/Debug-iphoneos/Starscream.framework"; sourceTree = "<group>"; };
 		31E84F2C1DFBBF8D0040DAA5 /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = "../SwiftPhoenixClient/Vendor/Starscream/build/Release-iphoneos/Starscream.framework"; sourceTree = "<group>"; };
 		5CAA922194FEFEB77A984749 /* Pods-PhoenixSwiftClient.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhoenixSwiftClient.release.xcconfig"; path = "Pods/Target Support Files/Pods-PhoenixSwiftClient/Pods-PhoenixSwiftClient.release.xcconfig"; sourceTree = "<group>"; };
 		5E02F7441DF789CE00830414 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
@@ -59,7 +78,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				31E84F2D1DFBBF8D0040DAA5 /* Starscream.framework in Frameworks */,
+				311CCBE71E04B2ED0049F56C /* Starscream.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -134,6 +153,10 @@
 		F0952ECBE3B4C4266432A93E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				311CCBE61E04B2ED0049F56C /* Starscream.framework */,
+				311CCBCE1E04B2410049F56C /* Pods_PhoenixSwiftClient.framework */,
+				311CCBC91E04B1440049F56C /* Starscream.framework */,
+				311CCBC31E04AFDB0049F56C /* Pods_PhoenixSwiftClient.framework */,
 				31E84F2C1DFBBF8D0040DAA5 /* Starscream.framework */,
 				98D357963DC2D206F8DB7C13 /* Pods_PhoenixSwiftClient.framework */,
 				BBA9D7A44A94E462591814B9 /* Pods_PhoenixSwiftClientTests.framework */,
@@ -159,12 +182,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5E0612B31DF64E9E00867F3A /* Build configuration list for PBXNativeTarget "PhoenixSwiftClient" */;
 			buildPhases = (
-				2D866ECCD073FAA5C767DFAD /* [CP] Check Pods Manifest.lock */,
 				5E06129A1DF64E9D00867F3A /* Sources */,
 				5E06129B1DF64E9D00867F3A /* Frameworks */,
 				5E06129C1DF64E9D00867F3A /* Headers */,
 				5E06129D1DF64E9D00867F3A /* Resources */,
-				AF7154DEB5A31E745D770B9A /* [CP] Copy Pods Resources */,
+				311CCBC51E04B02B0049F56C /* Copy Frameworks */,
 			);
 			buildRules = (
 			);
@@ -283,21 +305,6 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PhoenixSwiftClientTests/Pods-PhoenixSwiftClientTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		2D866ECCD073FAA5C767DFAD /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
 		9BAAF907B632BA6286895BA6 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -311,21 +318,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PhoenixSwiftClientTests/Pods-PhoenixSwiftClientTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		AF7154DEB5A31E745D770B9A /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PhoenixSwiftClient/Pods-PhoenixSwiftClient-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -473,6 +465,11 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/build/Debug-iphoneos",
+					"$(PROJECT_DIR)/Starscream/build/Debug-iphoneos",
+				);
 				INFOPLIST_FILE = PhoenixSwiftClient/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -495,6 +492,11 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/build/Debug-iphoneos",
+					"$(PROJECT_DIR)/Starscream/build/Debug-iphoneos",
+				);
 				INFOPLIST_FILE = PhoenixSwiftClient/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
