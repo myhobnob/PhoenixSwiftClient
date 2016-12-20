@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		1AFAF6293FD734CFDBC05A3F /* Pods_PhoenixSwiftClientTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBA9D7A44A94E462591814B9 /* Pods_PhoenixSwiftClientTests.framework */; };
 		311CCBE71E04B2ED0049F56C /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 311CCBE61E04B2ED0049F56C /* Starscream.framework */; };
-		311CCBE81E04B2F60049F56C /* Starscream.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 311CCBC91E04B1440049F56C /* Starscream.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5E02F7451DF789CE00830414 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E02F7441DF789CE00830414 /* Message.swift */; };
 		5E02F7471DF79D6200830414 /* Presence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E02F7461DF79D6200830414 /* Presence.swift */; };
 		5E0612A91DF64E9E00867F3A /* PhoenixSwiftClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E06129F1DF64E9D00867F3A /* PhoenixSwiftClient.framework */; };
@@ -39,7 +38,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				311CCBE81E04B2F60049F56C /* Starscream.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
