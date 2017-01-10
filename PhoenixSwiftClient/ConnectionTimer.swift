@@ -31,7 +31,7 @@ public class ConnectionTimer {
   }
   
   @objc public func handleTimeout(_: Timer) {
-    tries += 1
+    self.tries += 1
     callback()
   }
 }

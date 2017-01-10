@@ -67,7 +67,7 @@ public class Socket: WebSocketDelegate {
       conn.disconnect(forceTimeout: nil, closeCode: UInt16(code))
       self.conn = nil
     }
-    
+
     callback?()
   }
   
@@ -76,6 +76,8 @@ public class Socket: WebSocketDelegate {
       return
     }
     
+    print("Connecting to websocket")
+    setReconnectTimers()
     conn = WebSocket(url: endpoint.absoluteURL)
     if let connection = self.conn {
       connection.delegate = self
@@ -111,10 +113,15 @@ public class Socket: WebSocketDelegate {
     stateChangeCallbacks["open"]?.forEach({ $0(nil) })
   }
   
-  public func websocketDidDisconnect(socket: WebSocket, error: NSError?) {
-    triggerChanError(error)
+  // Unlike the JS library, there is no callback if the socket fails to connect
+  public func setReconnectTimers () {
     heartbeatTimer.invalidate()
     reconnectTimer?.scheduleTimeout()
+  }
+  
+  public func websocketDidDisconnect(socket: WebSocket, error: NSError?) {
+    triggerChanError(error)
+    setReconnectTimers()
     
     if error != nil {
       print("Websocket Disconnected with error: \(error?.localizedDescription)")

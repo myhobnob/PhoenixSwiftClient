@@ -62,7 +62,7 @@ public class Channel {
     joinPush!.receive(status: "timeout", callback: { (_: Any?) -> () in
       //      self.socket.log("channel", "timeout \(topic)", joinPush.timeout)
       self.state = ChannelState.errored
-      self.rejoinTimer = self.scheduleRejoinTimer()
+      self.scheduleRejoinTimer()
     })
 
     // Set up channel state callbacks and replies
@@ -82,7 +82,7 @@ public class Channel {
       self.rejoinTimer?.reset()
       //      self.socket.log("channel", "error \(topic)", reason)
       self.state = ChannelState.errored
-      self.rejoinTimer = self.scheduleRejoinTimer()
+      self.scheduleRejoinTimer()
     })
   }
   
@@ -90,19 +90,21 @@ public class Channel {
     rejoinTimer?.reset()
   }
 
-  private func scheduleRejoinTimer() -> ConnectionTimer? {
+  private func scheduleRejoinTimer() {
     if socket == nil {
-      return nil
+      return
     }
-
-    let timer = ConnectionTimer(callback: self.rejoinUntilConnected, timerCalc: socket!.reconnectAfterMs)
-    timer.scheduleTimeout()
-    return timer
+    
+    if (rejoinTimer == nil) {
+      rejoinTimer = ConnectionTimer(callback: self.rejoinUntilConnected, timerCalc: socket!.reconnectAfterMs)
+    }
+    
+    rejoinTimer!.scheduleTimeout()
   }
   
   @objc private func rejoinUntilConnected () {
-    rejoinTimer?.reset()
-    rejoinTimer = scheduleRejoinTimer()
+    print("Rejoining")
+    scheduleRejoinTimer()
     
     if (socket != nil && socket!.isConnected()) {
       rejoin(timeout: nil)
