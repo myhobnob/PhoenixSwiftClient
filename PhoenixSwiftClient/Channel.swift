@@ -31,13 +31,15 @@ enum ChannelState {
   case leaving
 }
 
+typealias Binding = (event: String, callback: (_: Any, _: NSInteger?) -> ())
+
 public class Channel {
   weak var socket: Socket?
   var state: ChannelState = ChannelState.closed
   var topic: String
   var params: Any?
 
-  var bindings: [(event: String, callback: (_: Any, _: NSInteger?) -> ())] = []
+  var bindings: [Binding] = []
   var timeout: NSInteger
   var joinedOnce = false
   var pushBuffer: [Push] = []
@@ -220,9 +222,7 @@ public class Channel {
       return
     }
     
-    DispatchQueue.global(qos: .background).async {
-      self.bindings.filter({ $0.event == event }).forEach { $0.callback(handledPayload ?? [:], ref) }
-    }
+    bindings.filter({ $0.event == event }).forEach { $0.callback(handledPayload ?? [:], ref) }
   }
   
   public func replyEventName(ref: NSInteger?) -> String {

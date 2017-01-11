@@ -120,6 +120,7 @@ public class Socket: WebSocketDelegate {
   }
   
   public func websocketDidDisconnect(socket: WebSocket, error: NSError?) {
+    print("Disconnected!")
     triggerChanError(error)
     setReconnectTimers()
     

@@ -19,6 +19,10 @@ public class ConnectionTimer {
     self.callback = callback
     self.timerCalc = timerCalc
   }
+
+  deinit {
+    reset()
+  }
   
   public func reset() {
     tries = 0

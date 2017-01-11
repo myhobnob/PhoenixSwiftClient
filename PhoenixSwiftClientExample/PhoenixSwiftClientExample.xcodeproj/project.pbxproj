@@ -14,7 +14,6 @@
 		5EE51C0F1DF662C900879010 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5EE51C0D1DF662C900879010 /* Main.storyboard */; };
 		5EE51C111DF662C900879010 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5EE51C101DF662C900879010 /* Assets.xcassets */; };
 		5EE51C141DF662C900879010 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5EE51C121DF662C900879010 /* LaunchScreen.storyboard */; };
-		7518FB5290FB9296EFC2616D /* Pods_PhoenixSwiftClientExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A37B22D623B2434996DA86F /* Pods_PhoenixSwiftClientExample.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -32,9 +31,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1A37B22D623B2434996DA86F /* Pods_PhoenixSwiftClientExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PhoenixSwiftClientExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		5251A12F82D39A307E614E2A /* Pods-PhoenixSwiftClientExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhoenixSwiftClientExample.release.xcconfig"; path = "../Pods/Target Support Files/Pods-PhoenixSwiftClientExample/Pods-PhoenixSwiftClientExample.release.xcconfig"; sourceTree = "<group>"; };
-		59507BBAC8A2F950EDDC14B7 /* Pods-PhoenixSwiftClientExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhoenixSwiftClientExample.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-PhoenixSwiftClientExample/Pods-PhoenixSwiftClientExample.debug.xcconfig"; sourceTree = "<group>"; };
 		5EAC485E1DFA38B6007B9188 /* PhoenixSwiftClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PhoenixSwiftClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5EE51C061DF662C900879010 /* PhoenixSwiftClientExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhoenixSwiftClientExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5EE51C091DF662C900879010 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -50,7 +46,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7518FB5290FB9296EFC2616D /* Pods_PhoenixSwiftClientExample.framework in Frameworks */,
 				5EAC485F1DFA38B6007B9188 /* PhoenixSwiftClient.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -64,8 +59,6 @@
 				5EAC485E1DFA38B6007B9188 /* PhoenixSwiftClient.framework */,
 				5EE51C081DF662C900879010 /* PhoenixSwiftClientExample */,
 				5EE51C071DF662C900879010 /* Products */,
-				91BC4FCDD5A447F08E3E816C /* Pods */,
-				F469B4AB0C51163D716FD94F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -88,23 +81,6 @@
 				5EE51C151DF662C900879010 /* Info.plist */,
 			);
 			path = PhoenixSwiftClientExample;
-			sourceTree = "<group>";
-		};
-		91BC4FCDD5A447F08E3E816C /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				59507BBAC8A2F950EDDC14B7 /* Pods-PhoenixSwiftClientExample.debug.xcconfig */,
-				5251A12F82D39A307E614E2A /* Pods-PhoenixSwiftClientExample.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
-		F469B4AB0C51163D716FD94F /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				1A37B22D623B2434996DA86F /* Pods_PhoenixSwiftClientExample.framework */,
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -303,7 +279,6 @@
 		};
 		5EE51C191DF662C900879010 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 59507BBAC8A2F950EDDC14B7 /* Pods-PhoenixSwiftClientExample.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 8MU777Z83C;
@@ -318,7 +293,6 @@
 		};
 		5EE51C1A1DF662C900879010 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5251A12F82D39A307E614E2A /* Pods-PhoenixSwiftClientExample.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 8MU777Z83C;
