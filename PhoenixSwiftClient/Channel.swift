@@ -67,12 +67,22 @@ public class Channel {
       self.scheduleRejoinTimer()
     })
 
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+      self.setChannelCallbacks()
+    }
+  }
+  
+  deinit {
+    rejoinTimer?.reset()
+  }
+  
+  private func setChannelCallbacks () {
     // Set up channel state callbacks and replies
     on(event: CHANNEL_EVENTS["reply"]!, callback: { (payload: Any?, ref: Int?) in
       let message = Message(topic: self.topic, event: self.replyEventName(ref: ref), payload: payload, ref: ref)
       self.trigger(message: message)
     })
-
+    
     onClose(callback: { (_: Any?, _: Int?) -> () in
       self.rejoinTimer?.reset()
       //      self.socket.log("channel", "close \(topic) \(joinRef())")
@@ -87,7 +97,7 @@ public class Channel {
       self.scheduleRejoinTimer()
     })
   }
-  
+
   deinit {
     rejoinTimer?.reset()
   }
@@ -222,7 +232,9 @@ public class Channel {
       return
     }
     
-    bindings.filter({ $0.event == event }).forEach { $0.callback(handledPayload ?? [:], ref) }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+      self.bindings.filter({ $0.event == event }).forEach { $0.callback(handledPayload ?? [:], ref) }
+    }
   }
   
   public func replyEventName(ref: NSInteger?) -> String {

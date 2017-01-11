@@ -166,7 +166,7 @@ public class Socket: WebSocketDelegate {
  
   internal func triggerChanError(_ error: NSError?) {
     channels.forEach({
-      $0.trigger(message: Message(topic: $0.topic, event: "error", payload: error, ref: -1))
+      $0.trigger(message: Message(topic: $0.topic, event: "phx_error", payload: error, ref: nil))
     })
   }
   
@@ -222,7 +222,7 @@ public class Socket: WebSocketDelegate {
   }
   
   private func runCallbacks(callbacks: [(_: Any?) -> ()]?, arg: Any?) {
-    DispatchQueue.global(qos: .background).async {
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
       callbacks?.forEach { $0(arg) }
     }
   }
