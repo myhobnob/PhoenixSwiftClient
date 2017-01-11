@@ -98,10 +98,6 @@ public class Channel {
     })
   }
 
-  deinit {
-    rejoinTimer?.reset()
-  }
-
   private func scheduleRejoinTimer() {
     if socket == nil {
       return
@@ -232,7 +228,7 @@ public class Channel {
       return
     }
     
-    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+    DispatchQueue.main.asyncAfter(deadline: .now()) {
       self.bindings.filter({ $0.event == event }).forEach { $0.callback(handledPayload ?? [:], ref) }
     }
   }

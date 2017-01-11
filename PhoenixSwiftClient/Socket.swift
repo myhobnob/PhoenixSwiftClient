@@ -222,7 +222,7 @@ public class Socket: WebSocketDelegate {
   }
   
   private func runCallbacks(callbacks: [(_: Any?) -> ()]?, arg: Any?) {
-    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+    DispatchQueue.main.asyncAfter(deadline: .now()) {
       callbacks?.forEach { $0(arg) }
     }
   }
