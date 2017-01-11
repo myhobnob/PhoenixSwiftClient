@@ -220,7 +220,9 @@ public class Channel {
       return
     }
     
-    bindings.filter({ $0.event == event }).forEach { $0.callback(handledPayload ?? [:], ref) }
+    DispatchQueue.global(qos: .background).async {
+      self.bindings.filter({ $0.event == event }).forEach { $0.callback(handledPayload ?? [:], ref) }
+    }
   }
   
   public func replyEventName(ref: NSInteger?) -> String {

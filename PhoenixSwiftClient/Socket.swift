@@ -110,7 +110,7 @@ public class Socket: WebSocketDelegate {
     heartbeatTimer.invalidate()
     heartbeatTimer = Timer.scheduledTimer(timeInterval: Double(heartbeatIntervalMs / 1000), target: self, selector: #selector(sendHeartbeat), userInfo: nil, repeats: true)
     
-    stateChangeCallbacks["open"]?.forEach({ $0(nil) })
+    runCallbacks(callbacks: stateChangeCallbacks["open"], arg: nil)
   }
   
   // Unlike the JS library, there is no callback if the socket fails to connect
@@ -125,9 +125,9 @@ public class Socket: WebSocketDelegate {
     
     if error != nil {
       print("Websocket Disconnected with error: \(error?.localizedDescription)")
-      stateChangeCallbacks["error"]?.forEach({ $0(error) })
+      runCallbacks(callbacks: stateChangeCallbacks["error"], arg: error)
     } else {
-      stateChangeCallbacks["close"]?.forEach({ $0(nil) })
+      runCallbacks(callbacks: stateChangeCallbacks["close"], arg: nil)
     }
     
   }
@@ -220,11 +220,9 @@ public class Socket: WebSocketDelegate {
     }
   }
   
-  
-  
-  
-  
-  
-  
-  
+  private func runCallbacks(callbacks: [(_: Any?) -> ()]?, arg: Any?) {
+    DispatchQueue.global(qos: .background).async {
+      callbacks?.forEach { $0(arg) }
+    }
+  }
 }
