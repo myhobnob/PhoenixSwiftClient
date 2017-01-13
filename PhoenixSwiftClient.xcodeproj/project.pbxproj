@@ -61,7 +61,7 @@
 		5E0612A81DF64E9E00867F3A /* PhoenixSwiftClientTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PhoenixSwiftClientTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5E0612AD1DF64E9E00867F3A /* PhoenixSwiftClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoenixSwiftClientTests.swift; sourceTree = "<group>"; };
 		5E0612AF1DF64E9E00867F3A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		5E3203D71DF8E57200E6A792 /* ConnectionTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionTimer.swift; sourceTree = "<group>"; };
+		5E3203D71DF8E57200E6A792 /* ConnectionTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = ConnectionTimer.swift; sourceTree = "<group>"; tabWidth = 2; };
 		5EAE532F1DF74C2400E57351 /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		5EB0288A1DF64EF20010FCDC /* Socket.swift */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = Socket.swift; sourceTree = "<group>"; tabWidth = 2; };
 		5EE51C1B1DF6648800879010 /* Channel.swift */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; tabWidth = 2; };

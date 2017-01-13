@@ -19,6 +19,10 @@ public class ConnectionTimer {
     self.callback = callback
     self.timerCalc = timerCalc
   }
+
+  deinit {
+    reset()
+  }
   
   public func reset() {
     tries = 0
@@ -31,7 +35,7 @@ public class ConnectionTimer {
   }
   
   @objc public func handleTimeout(_: Timer) {
-    tries += 1
+    self.tries += 1
     callback()
   }
 }

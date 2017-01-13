@@ -31,13 +31,15 @@ enum ChannelState {
   case leaving
 }
 
+typealias Binding = (event: String, callback: (_: Any, _: NSInteger?) -> ())
+
 public class Channel {
   weak var socket: Socket?
   var state: ChannelState = ChannelState.closed
   var topic: String
   var params: Any?
 
-  var bindings: [(event: String, callback: (_: Any, _: NSInteger?) -> ())] = []
+  var bindings: [Binding] = []
   var timeout: NSInteger
   var joinedOnce = false
   var pushBuffer: [Push] = []
@@ -62,15 +64,25 @@ public class Channel {
     joinPush!.receive(status: "timeout", callback: { (_: Any?) -> () in
       //      self.socket.log("channel", "timeout \(topic)", joinPush.timeout)
       self.state = ChannelState.errored
-      self.rejoinTimer = self.scheduleRejoinTimer()
+      self.scheduleRejoinTimer()
     })
 
+    DispatchQueue.main.asyncAfter(deadline: .now()) {
+      self.setChannelCallbacks()
+    }
+  }
+  
+  deinit {
+    rejoinTimer?.reset()
+  }
+  
+  private func setChannelCallbacks () {
     // Set up channel state callbacks and replies
     on(event: CHANNEL_EVENTS["reply"]!, callback: { (payload: Any?, ref: Int?) in
       let message = Message(topic: self.topic, event: self.replyEventName(ref: ref), payload: payload, ref: ref)
       self.trigger(message: message)
     })
-
+    
     onClose(callback: { (_: Any?, _: Int?) -> () in
       self.rejoinTimer?.reset()
       //      self.socket.log("channel", "close \(topic) \(joinRef())")
@@ -82,27 +94,25 @@ public class Channel {
       self.rejoinTimer?.reset()
       //      self.socket.log("channel", "error \(topic)", reason)
       self.state = ChannelState.errored
-      self.rejoinTimer = self.scheduleRejoinTimer()
+      self.scheduleRejoinTimer()
     })
   }
-  
-  deinit {
-    rejoinTimer?.reset()
-  }
 
-  private func scheduleRejoinTimer() -> ConnectionTimer? {
+  private func scheduleRejoinTimer() {
     if socket == nil {
-      return nil
+      return
     }
-
-    let timer = ConnectionTimer(callback: self.rejoinUntilConnected, timerCalc: socket!.reconnectAfterMs)
-    timer.scheduleTimeout()
-    return timer
+    
+    if (rejoinTimer == nil) {
+      rejoinTimer = ConnectionTimer(callback: self.rejoinUntilConnected, timerCalc: socket!.reconnectAfterMs)
+    }
+    
+    rejoinTimer!.scheduleTimeout()
   }
   
   @objc private func rejoinUntilConnected () {
-    rejoinTimer?.reset()
-    rejoinTimer = scheduleRejoinTimer()
+    print("Rejoining")
+    scheduleRejoinTimer()
     
     if (socket != nil && socket!.isConnected()) {
       rejoin(timeout: nil)
@@ -218,7 +228,9 @@ public class Channel {
       return
     }
     
-    bindings.filter({ $0.event == event }).forEach { $0.callback(handledPayload ?? [:], ref) }
+    DispatchQueue.main.asyncAfter(deadline: .now()) {
+      self.bindings.filter({ $0.event == event }).forEach { $0.callback(handledPayload ?? [:], ref) }
+    }
   }
   
   public func replyEventName(ref: NSInteger?) -> String {

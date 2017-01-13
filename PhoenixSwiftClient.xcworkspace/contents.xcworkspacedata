@@ -8,6 +8,6 @@
       location = "group:PhoenixSwiftClient.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:Pods/Pods.xcodeproj">
+      location = "group:Starscream/Starscream.xcodeproj">
    </FileRef>
 </Workspace>

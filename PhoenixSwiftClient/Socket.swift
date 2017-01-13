@@ -67,7 +67,7 @@ public class Socket: WebSocketDelegate {
       conn.disconnect(forceTimeout: nil, closeCode: UInt16(code))
       self.conn = nil
     }
-    
+
     callback?()
   }
   
@@ -76,6 +76,8 @@ public class Socket: WebSocketDelegate {
       return
     }
     
+    print("Connecting to websocket")
+    setReconnectTimers()
     conn = WebSocket(url: endpoint.absoluteURL)
     if let connection = self.conn {
       connection.delegate = self
@@ -108,19 +110,25 @@ public class Socket: WebSocketDelegate {
     heartbeatTimer.invalidate()
     heartbeatTimer = Timer.scheduledTimer(timeInterval: Double(heartbeatIntervalMs / 1000), target: self, selector: #selector(sendHeartbeat), userInfo: nil, repeats: true)
     
-    stateChangeCallbacks["open"]?.forEach({ $0(nil) })
+    runCallbacks(callbacks: stateChangeCallbacks["open"], arg: nil)
+  }
+  
+  // Unlike the JS library, there is no callback if the socket fails to connect
+  public func setReconnectTimers () {
+    heartbeatTimer.invalidate()
+    reconnectTimer?.scheduleTimeout()
   }
   
   public func websocketDidDisconnect(socket: WebSocket, error: NSError?) {
+    print("Disconnected!")
     triggerChanError(error)
-    heartbeatTimer.invalidate()
-    reconnectTimer?.scheduleTimeout()
+    setReconnectTimers()
     
     if error != nil {
       print("Websocket Disconnected with error: \(error?.localizedDescription)")
-      stateChangeCallbacks["error"]?.forEach({ $0(error) })
+      runCallbacks(callbacks: stateChangeCallbacks["error"], arg: error)
     } else {
-      stateChangeCallbacks["close"]?.forEach({ $0(nil) })
+      runCallbacks(callbacks: stateChangeCallbacks["close"], arg: nil)
     }
     
   }
@@ -158,7 +166,7 @@ public class Socket: WebSocketDelegate {
  
   internal func triggerChanError(_ error: NSError?) {
     channels.forEach({
-      $0.trigger(message: Message(topic: $0.topic, event: "error", payload: error, ref: -1))
+      $0.trigger(message: Message(topic: $0.topic, event: "phx_error", payload: error, ref: nil))
     })
   }
   
@@ -213,11 +221,9 @@ public class Socket: WebSocketDelegate {
     }
   }
   
-  
-  
-  
-  
-  
-  
-  
+  private func runCallbacks(callbacks: [(_: Any?) -> ()]?, arg: Any?) {
+    DispatchQueue.main.asyncAfter(deadline: .now()) {
+      callbacks?.forEach { $0(arg) }
+    }
+  }
 }
