@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'PhoenixSwiftClient'
-  s.version          = '1.1.0'
+  s.version          = '1.2.0'
   s.summary          = 'Swift library for connecting to Phoenix channels.'
 
 # This description is used to generate tags and improve search results.
