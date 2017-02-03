@@ -14,7 +14,10 @@ var DEFAULT_HEARTBEAT_INTERVAL = 30000
 
 public class Socket: WebSocketDelegate {
   var conn: WebSocket?
-  var stateChangeCallbacks: [String: [(_: Any?) -> ()]] = ["open": [], "close": [], "error": [], "message": []]
+  var openCallbacks: [() -> ()] = []
+  var closeCallbacks: [() -> ()] = []
+  var errorCallbacks: [(_: NSError?) -> ()] = []
+  var messageCallbacks: [(_: Any?) -> ()] = []
   var channels: [Channel] = []
   var sendBuffer: [() -> ()] = []
   var ref = 0
@@ -43,14 +46,20 @@ public class Socket: WebSocketDelegate {
     urlComponents?.queryItems = queryParams
 
     endpoint = urlComponents!.url!
+
+    reconnectTimer = ConnectionTimer(callback: {[unowned self] in
+      self.disconnect(callback: {[unowned self] in
+        self.connect()
+        }, code: 0)
+    }, timerCalc: self.reconnectAfterMs)
   }
 
 
   internal func reconnectAfterMs(tries: Int) -> Int {
     if tries < 4 {
-        return [1000, 2000, 5000, 10000][tries]
+      return [5000, 5000, 7000, 15000][tries]
     } else {
-        return 10000
+      return 15000
     }
   }
 
@@ -59,11 +68,16 @@ public class Socket: WebSocketDelegate {
       conn.disconnect(forceTimeout: nil, closeCode: UInt16(code))
       self.conn = nil
     }
-    self.reconnectTimer?.reset()
-    self.reconnectTimer = nil
     self.heartbeatTimer.invalidate()
 
     callback?()
+  }
+
+  @objc public func close() {
+    self.disconnect(callback: nil, code: 0)
+    self.reconnectTimer?.reset()
+    self.reconnectTimer = nil
+    self.channels.removeAll()
   }
 
   @objc public func connect () {
@@ -71,7 +85,8 @@ public class Socket: WebSocketDelegate {
       return
     }
 
-    print("Connecting to websocket")
+    NSLog("Socket Connecting to websocket")
+    // Set the reconnect timers. If we don't finish connecting before then, then we will reconnect
     setReconnectTimers()
     conn = WebSocket(url: endpoint.absoluteURL)
     if let connection = self.conn {
@@ -82,20 +97,20 @@ public class Socket: WebSocketDelegate {
 
   // TODO: Implement overridable logger. Maybe as a delegate method?
 
-  public func onOpen(callback: @escaping (_: Any?) -> ()) {
-    stateChangeCallbacks["open"]!.append(callback)
+  public func onOpen(callback: @escaping () -> ()) {
+    openCallbacks.append(callback)
   }
 
-  public func onClose(callback: @escaping (_: Any?) -> ()) {
-    stateChangeCallbacks["close"]!.append(callback)
+  public func onClose(callback: @escaping () -> ()) {
+    closeCallbacks.append(callback)
   }
 
   public func onError(callback: @escaping (_: NSError?) -> ()) {
-    stateChangeCallbacks["error"]!.append(callback as! (Any?) -> ())
+    errorCallbacks.append(callback)
   }
 
   public func onMessage(callback: @escaping (_: Any?) -> ()) {
-    stateChangeCallbacks["message"]!.append(callback)
+    messageCallbacks.append(callback)
   }
 
   public func websocketDidConnect(socket: WebSocket) {
@@ -105,18 +120,15 @@ public class Socket: WebSocketDelegate {
     heartbeatTimer.invalidate()
     heartbeatTimer = Timer.scheduledTimer(timeInterval: Double(heartbeatIntervalMs / 1000), target: self, selector: #selector(sendHeartbeat), userInfo: nil, repeats: true)
 
-    runCallbacks(callbacks: stateChangeCallbacks["open"], arg: nil)
+    DispatchQueue.main.asyncAfter(deadline: .now()) {
+      self.openCallbacks.forEach { $0() }
+    }
   }
 
   // Unlike the JS library, there is no callback if the socket fails to connect
   public func setReconnectTimers () {
     heartbeatTimer.invalidate()
 
-    // in case the reset timer already exists, reset it
-    reconnectTimer?.reset()
-    reconnectTimer = ConnectionTimer(callback: {[unowned self] in
-      self.disconnect(callback: {[unowned self] in self.connect()}, code: 0)
-    }, timerCalc: self.reconnectAfterMs)
     reconnectTimer!.scheduleTimeout()
   }
 
@@ -127,11 +139,14 @@ public class Socket: WebSocketDelegate {
 
     if error != nil {
       print("Websocket Disconnected with error: \(error?.localizedDescription)")
-      runCallbacks(callbacks: stateChangeCallbacks["error"], arg: error)
+      DispatchQueue.main.asyncAfter(deadline: .now()) {
+        self.errorCallbacks.forEach { $0(error) }
+      }
     } else {
-      runCallbacks(callbacks: stateChangeCallbacks["close"], arg: nil)
+      DispatchQueue.main.asyncAfter(deadline: .now()) {
+        self.closeCallbacks.forEach { $0() }
+      }
     }
-
   }
 
   public func websocketDidReceiveMessage(socket: WebSocket, text: String) {
@@ -221,12 +236,6 @@ public class Socket: WebSocketDelegate {
     if isConnected() && !sendBuffer.isEmpty {
       sendBuffer.forEach({ $0() })
       sendBuffer.removeAll()
-    }
-  }
-
-  private func runCallbacks(callbacks: [(_: Any?) -> ()]?, arg: Any?) {
-    DispatchQueue.main.asyncAfter(deadline: .now()) {
-      callbacks?.forEach { $0(arg) }
     }
   }
 }
