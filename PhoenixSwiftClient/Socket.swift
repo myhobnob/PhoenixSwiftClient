@@ -14,7 +14,10 @@ var DEFAULT_HEARTBEAT_INTERVAL = 30000
 
 public class Socket: WebSocketDelegate {
   var conn: WebSocket?
-  var stateChangeCallbacks: [String: [(_: Any?) -> ()]] = ["open": [], "close": [], "error": [], "message": []]
+  var openCallbacks: [() -> ()] = []
+  var closeCallbacks: [() -> ()] = []
+  var errorCallbacks: [(_: NSError?) -> ()] = []
+  var messageCallbacks: [(_: Any?) -> ()] = []
   var channels: [Channel] = []
   var sendBuffer: [() -> ()] = []
   var ref = 0
@@ -96,20 +99,20 @@ public class Socket: WebSocketDelegate {
 
   // TODO: Implement overridable logger. Maybe as a delegate method?
 
-  public func onOpen(callback: @escaping (_: Any?) -> ()) {
-    stateChangeCallbacks["open"]!.append(callback)
+  public func onOpen(callback: @escaping () -> ()) {
+    openCallbacks.append(callback)
   }
 
-  public func onClose(callback: @escaping (_: Any?) -> ()) {
-    stateChangeCallbacks["close"]!.append(callback)
+  public func onClose(callback: @escaping () -> ()) {
+    closeCallbacks.append(callback)
   }
 
   public func onError(callback: @escaping (_: NSError?) -> ()) {
-    stateChangeCallbacks["error"]!.append(callback as! (Any?) -> ())
+    errorCallbacks.append(callback)
   }
 
   public func onMessage(callback: @escaping (_: Any?) -> ()) {
-    stateChangeCallbacks["message"]!.append(callback)
+    messageCallbacks.append(callback)
   }
 
   public func websocketDidConnect(socket: WebSocket) {
@@ -120,7 +123,9 @@ public class Socket: WebSocketDelegate {
     heartbeatTimer.invalidate()
     heartbeatTimer = Timer.scheduledTimer(timeInterval: Double(heartbeatIntervalMs / 1000), target: self, selector: #selector(sendHeartbeat), userInfo: nil, repeats: true)
 
-    runCallbacks(callbacks: stateChangeCallbacks["open"], arg: nil)
+    DispatchQueue.main.asyncAfter(deadline: .now()) {
+      self.openCallbacks.forEach { $0() }
+    }
   }
 
   // Unlike the JS library, there is no callback if the socket fails to connect
@@ -137,11 +142,14 @@ public class Socket: WebSocketDelegate {
 
     if error != nil {
       print("Websocket Disconnected with error: \(error?.localizedDescription)")
-      runCallbacks(callbacks: stateChangeCallbacks["error"], arg: error)
+      DispatchQueue.main.asyncAfter(deadline: .now()) {
+        self.errorCallbacks.forEach { $0(error) }
+      }
     } else {
-      runCallbacks(callbacks: stateChangeCallbacks["close"], arg: nil)
+      DispatchQueue.main.asyncAfter(deadline: .now()) {
+        self.closeCallbacks.forEach { $0() }
+      }
     }
-
   }
 
   public func websocketDidReceiveMessage(socket: WebSocket, text: String) {
@@ -231,12 +239,6 @@ public class Socket: WebSocketDelegate {
     if isConnected() && !sendBuffer.isEmpty {
       sendBuffer.forEach({ $0() })
       sendBuffer.removeAll()
-    }
-  }
-
-  private func runCallbacks(callbacks: [(_: Any?) -> ()]?, arg: Any?) {
-    DispatchQueue.main.asyncAfter(deadline: .now()) {
-      callbacks?.forEach { $0(arg) }
     }
   }
 }
