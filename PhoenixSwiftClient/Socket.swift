@@ -26,6 +26,7 @@ public class Socket: WebSocketDelegate {
   var reconnectTimer: ConnectionTimer?
 
   public init(endpointUrl: URL, options: [String: Any?]) {
+    NSLog("socket init!!!!!!!!!")
     timeout = options["timeout"] as? Int ?? DEFAULT_TIMEOUT
     heartbeatIntervalMs = options["heartbeatIntervalMs"] as? Int ?? DEFAULT_HEARTBEAT_INTERVAL
     // TODO: Allow  reconnectAfterMs as parameter? Think it'd just be better to take options as a Swift object.
@@ -43,10 +44,18 @@ public class Socket: WebSocketDelegate {
     urlComponents?.queryItems = queryParams
 
     endpoint = urlComponents!.url!
+    
+    reconnectTimer = ConnectionTimer(callback: {[unowned self] in
+      NSLog("Reconnect timer running!!!!!!!!!!!!!!!!")
+      self.disconnect(callback: {[unowned self] in
+        self.connect()
+        }, code: 0)
+    }, timerCalc: self.reconnectAfterMs)
   }
 
 
   internal func reconnectAfterMs(tries: Int) -> Int {
+    print("Socket reconnectAfterMs running on tries \(tries)")
     if tries < 4 {
         return [1000, 2000, 5000, 10000][tries]
     } else {
@@ -59,11 +68,15 @@ public class Socket: WebSocketDelegate {
       conn.disconnect(forceTimeout: nil, closeCode: UInt16(code))
       self.conn = nil
     }
-    self.reconnectTimer?.reset()
-    self.reconnectTimer = nil
     self.heartbeatTimer.invalidate()
 
     callback?()
+  }
+  
+  @objc public func close() {
+    self.disconnect(callback: nil, code: 0)
+    self.reconnectTimer?.reset()
+    self.reconnectTimer = nil
   }
 
   @objc public func connect () {
@@ -71,7 +84,8 @@ public class Socket: WebSocketDelegate {
       return
     }
 
-    print("Connecting to websocket")
+    NSLog("Socket Connecting to websocket")
+    // Set the reconnect timers. If we don't finish connecting before then, then we will reconnect
     setReconnectTimers()
     conn = WebSocket(url: endpoint.absoluteURL)
     if let connection = self.conn {
@@ -99,6 +113,7 @@ public class Socket: WebSocketDelegate {
   }
 
   public func websocketDidConnect(socket: WebSocket) {
+    NSLog("Socket websocketDidConnect!!!!!!!!!!!!")
     flushSendBuffer()
     reconnectTimer?.reset()
 
@@ -112,11 +127,6 @@ public class Socket: WebSocketDelegate {
   public func setReconnectTimers () {
     heartbeatTimer.invalidate()
 
-    // in case the reset timer already exists, reset it
-    reconnectTimer?.reset()
-    reconnectTimer = ConnectionTimer(callback: {[unowned self] in
-      self.disconnect(callback: {[unowned self] in self.connect()}, code: 0)
-    }, timerCalc: self.reconnectAfterMs)
     reconnectTimer!.scheduleTimeout()
   }
 
